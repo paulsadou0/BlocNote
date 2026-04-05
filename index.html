@@ -1,1 +1,143 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f8b8d" />
+    <meta name="description" content="BlocNote - Prise de notes rapide, locale et hors-ligne." />
+    <title>BlocNote</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-shape bg-shape-1" aria-hidden="true"></div>
+    <div class="bg-shape bg-shape-2" aria-hidden="true"></div>
 
+    <header class="topbar">
+      <h1>BlocNote</h1>
+      <p>Capture tes idees en un eclair.</p>
+      <div class="topbar-actions">
+        <button id="install-app-btn" class="btn btn-primary" type="button" hidden>
+          Installer l'app
+        </button>
+        <button id="phone-preview-btn" class="btn btn-neutral" type="button" hidden>
+          Apercu ecran telephone: ON
+        </button>
+      </div>
+      <p id="install-help-text" class="install-help" hidden></p>
+    </header>
+
+    <div class="phone-shell" id="phone-shell">
+      <main class="app-grid">
+      <section class="panel panel-list">
+        <div class="panel-header">
+          <h2>Mes notes</h2>
+          <div class="panel-actions">
+            <button id="new-note-btn" class="btn btn-primary">+ Nouvelle note</button>
+            <button id="export-notes-btn" class="btn btn-neutral">Exporter JSON</button>
+            <button id="import-notes-btn" class="btn btn-neutral">Importer JSON</button>
+            <input id="import-file-input" type="file" accept="application/json" hidden />
+          </div>
+        </div>
+
+        <label class="search-wrap" for="search-input">
+          <span>Rechercher</span>
+          <input id="search-input" type="search" placeholder="Titre ou contenu" />
+        </label>
+
+        <label class="search-wrap" for="tag-filter-select">
+          <span>Filtrer par tag</span>
+          <select id="tag-filter-select">
+            <option value="">Tous les tags</option>
+          </select>
+        </label>
+
+        <section class="cloud-wrap" aria-labelledby="cloud-title">
+          <h3 id="cloud-title">Synchronisation cloud</h3>
+
+          <label class="search-wrap" for="supabase-url">
+            <span>Supabase URL</span>
+            <input id="supabase-url" type="url" placeholder="https://xxxxx.supabase.co" />
+          </label>
+
+          <label class="search-wrap" for="supabase-anon-key">
+            <span>Supabase Anon Key</span>
+            <input id="supabase-anon-key" type="password" placeholder="eyJ..." />
+          </label>
+
+          <label class="search-wrap" for="cloud-email">
+            <span>Email</span>
+            <input id="cloud-email" type="email" placeholder="toi@email.com" />
+          </label>
+
+          <label class="search-wrap" for="cloud-password">
+            <span>Mot de passe</span>
+            <input id="cloud-password" type="password" placeholder="Mot de passe" />
+          </label>
+
+          <div class="cloud-actions">
+            <button id="cloud-connect-btn" class="btn btn-neutral">Se connecter</button>
+            <button id="cloud-logout-btn" class="btn btn-neutral" disabled>Se deconnecter</button>
+            <button id="cloud-push-btn" class="btn btn-primary" disabled>Envoyer cloud</button>
+            <button id="cloud-pull-btn" class="btn btn-neutral" disabled>Recuperer cloud</button>
+          </div>
+
+          <div class="cloud-auto-wrap">
+            <label class="cloud-inline" for="cloud-auto-enabled">
+              <input id="cloud-auto-enabled" type="checkbox" />
+              <span>Sync auto activee</span>
+            </label>
+            <label class="search-wrap" for="cloud-auto-minutes">
+              <span>Frequence (minutes)</span>
+              <input id="cloud-auto-minutes" type="number" min="1" max="120" step="1" value="5" />
+            </label>
+          </div>
+
+          <p id="cloud-status-text" class="cloud-status">Cloud inactif</p>
+          <p id="cloud-conflict-text" class="cloud-status">Aucun conflit detecte</p>
+        </section>
+
+        <ul id="notes-list" class="notes-list" aria-live="polite"></ul>
+      </section>
+
+      <section class="panel panel-editor">
+        <div class="editor-head">
+          <input id="note-title" type="text" maxlength="100" placeholder="Titre de la note" />
+          <button id="delete-note-btn" class="btn btn-danger" disabled>Supprimer</button>
+        </div>
+
+        <textarea
+          id="note-content"
+          placeholder="Ecris ta note ici..."
+          rows="14"
+          disabled
+        ></textarea>
+
+        <label class="search-wrap" for="note-tags">
+          <span>Tags (separes par des virgules)</span>
+          <input id="note-tags" type="text" placeholder="perso, travail, idee" disabled />
+        </label>
+
+        <div class="editor-foot">
+          <span id="status-text">Aucune note selectionnee</span>
+          <div class="conflict-actions" id="conflict-actions" hidden>
+            <button id="resolve-local-btn" class="btn btn-neutral" type="button">Garder locale</button>
+            <button id="resolve-cloud-btn" class="btn btn-neutral" type="button">Garder cloud</button>
+          </div>
+          <span id="count-text">0 note</span>
+        </div>
+      </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
